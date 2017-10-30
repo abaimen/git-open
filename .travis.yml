@@ -17,6 +17,6 @@ script:
   - npm run lint:package
   - npm run lint:readme
   - npm run lint:editorconfig
-  - shellcheck -v
+  - shellcheck -V
   - shellcheck git-open
   - ./bats/bin/bats test/*.bats
