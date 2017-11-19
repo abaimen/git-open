@@ -1,0 +1,284 @@
+
+p_g = 1.26 #g/cm^3, density of glycerol
+n_g = 9.34 #g/(cm*s) at 25°, viscosity of glycerol
+p_w = 1.00 #g/cm^3, density of water
+n_w = 0.01 #g/(cm*s), viscosity of water
+
+## page 4; estimate time to reach terminal velocity for ...
+def tao(d, r, n):
+	return (2/9) * (d*r**2)/n
+
+tao_question = tao(2.7, 0.05, 15)
+print(tao_question)
+
+#d = density; g/cm^3
+#r = radius of sphere; cm
+#n = viscosity; g/(cm*s)
+
+import numpy as np
+import pylab as pl
+from scipy.optimize import curve_fit
+
+def f(x, a, b):
+	return a*x + b
+
+##Glycerine, smallest ball (1)
+t11, g11 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf11.txt", unpack = True, skiprows = 2)
+t12, g12 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf12.txt", unpack = True, skiprows = 2)
+t13, g13 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf13.txt", unpack = True, skiprows = 2)
+
+g11, g12, g13 = g11/10, g12/10, g13/10 #convert to cm
+
+def remove_zeros(t,d):
+	t_nozero = []
+	d_nozero =[]
+	for i in range(len(d)):
+    	if d[i] != 0:
+        	t_nozero.append(t[i])
+        	d_nozero.append(d[i])
+	t_nozero = np.array(t_nozero)
+	d_nozero = np.array(d_nozero)   	 
+	return (t_nozero, d_nozero)
+
+t11, g11 = remove_zeros(t11,g11)
+t12, g12 = remove_zeros(t12,g12)
+t13, g13 = remove_zeros(t13,g13)
+
+popt11, pcov11 = curve_fit(f, t11, g11)
+popt12, pcov12 = curve_fit(f, t12, g12)
+popt13, pcov13 = curve_fit(f, t13, g13)
+
+#pl.scatter(t11,g11, label= "Trial 1", s=1)
+#pl.scatter(t12,g12, label= "Trial 2", s=.5)
+#pl.scatter(t13,g13, label= "Trial 3", s=.5)
+#pl.xlabel("Time (s)")
+#pl.ylabel("Position (cm)")
+#pl.title("Glycerine: Position vs time for ball 1")
+#pl.plot(t11, f(t11, popt11[0], popt11[1]), label = "line of best fit, trial 1")
+#pl.plot(t12, f(t12, popt12[0], popt12[1]), label = "line of best fit, trial 2")
+#pl.plot(t13, f(t13, popt13[0], popt13[1]), label = "line of best fit, trial 3")
+#pl.legend()
+#pl.show()
+
+v11 = np.diff(g11)/np.diff(t11)
+v12 = np.diff(g12)/np.diff(t12)
+v13 = np.diff(g13)/np.diff(t13)
+
+v1 = np.hstack([v11,v12,v13])
+
+#print("mean terminal velocity for ball 1", np.mean(v1))
+
+v1 = np.mean(v1)
+
+#pl.figure()
+#pl.hist(v12,bins=[0,0.5,1,10,20])
+#pl.figure()
+#pl.plot(v12[:100])
+
+##Glycerine, ball 2
+t21, g21 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf21.txt", unpack = True, skiprows = 2)
+t22, g22 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf22.txt", unpack = True, skiprows = 2)
+t23, g23 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf23.txt", unpack = True, skiprows = 2)
+
+g21, g22, g23 = g21/10, g22/10, g23/10 #convert to cm
+
+t21, g21 = remove_zeros(t21,g21)
+t22, g22 = remove_zeros(t22,g22)
+t23, g23 = remove_zeros(t23,g23)
+
+popt21, pcov21 = curve_fit(f, t21, g21)
+popt22, pcov22 = curve_fit(f, t22, g22)
+popt23, pcov23 = curve_fit(f, t23, g23)
+
+#pl.scatter(t21,g21, label= "Trial 1", s=1)
+#pl.scatter(t22,g22, label= "Trial 2", s=1)
+#pl.scatter(t23,g23, label= "Trial 3", s=1)
+#pl.xlabel("Time (s)")
+#pl.ylabel("Position (cm)")
+#pl.title("Glycerine: Position vs time for ball 2")
+#pl.plot(t21, f(t21, popt21[0], popt21[1]), label = "line of best fit, trial 1")
+#pl.plot(t22, f(t22, popt22[0], popt22[1]), label = "line of best fit, trial 2")
+#pl.plot(t23, f(t23, popt23[0], popt23[1]), label = "line of best fit, trial 3")
+#pl.legend()
+#pl.show()
+
+v21 = np.diff(g21)/np.diff(t21)
+v22 = np.diff(g22)/np.diff(t22)
+v23 = np.diff(g23)/np.diff(t23)
+
+v2 = np.hstack([v21,v22,v23])
+
+#print("mean terminal velocity for ball 2", np.mean(v2))
+
+v2 = np.mean(v2)
+
+##Glycerine, ball 3
+t31, g31 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf31.txt", unpack = True, skiprows = 2)
+t32, g32 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf32.txt", unpack = True, skiprows = 2)
+t33, g33 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf33.txt", unpack = True, skiprows = 2)
+
+g31, g32, g33 = g31/10, g32/10, g33/10 #convert to cm
+
+t31, g31 = remove_zeros(t31,g31)
+t32, g32 = remove_zeros(t32,g32)
+t33, g33 = remove_zeros(t33,g33)
+
+popt31, pcov31 = curve_fit(f, t31, g31)
+popt32, pcov32 = curve_fit(f, t32, g32)
+popt33, pcov33 = curve_fit(f, t33, g33)
+
+#pl.scatter(t31,g31, label= "Trial 1", s=.5)
+#pl.scatter(t32,g32, label= "Trial 2", s=.5)
+#pl.scatter(t33,g33, label= "Trial 3", s=.5)
+#pl.xlabel("Time (s)")
+#pl.ylabel("Position (cm)")
+#pl.title("Glycerine: Position vs time for ball 3")
+#pl.plot(t31, f(t31, popt31[0], popt31[1]), label = "line of best fit, trial 1")
+#pl.plot(t32, f(t32, popt32[0], popt32[1]), label = "line of best fit, trial 2")
+#pl.plot(t33, f(t33, popt33[0], popt33[1]), label = "line of best fit, trial 3")
+#pl.legend()
+#pl.show()
+
+v31 = np.diff(g31)/np.diff(t31)
+v32 = np.diff(g32)/np.diff(t32)
+v33 = np.diff(g33)/np.diff(t33)
+
+v3 = np.hstack([v31,v32,v33])
+
+#print("mean terminal velocity for ball 3", np.mean(v3))
+
+v3 = np.mean(v3)
+
+##Glycerine, ball 3
+t41, g41 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf41.txt", unpack = True, skiprows = 2)
+t42, g42 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf42.txt", unpack = True, skiprows = 2)
+t43, g43 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf43.txt", unpack = True, skiprows = 2)
+
+g41, g42, g43 = g41/10, g42/10, g43/10 #convert to cm
+
+t41, g41 = remove_zeros(t41,g41)
+t42, g42 = remove_zeros(t42,g42)
+t43, g43 = remove_zeros(t43,g43)
+
+popt41, pcov41 = curve_fit(f, t41, g41)
+popt42, pcov42 = curve_fit(f, t42, g42)
+popt43, pcov43 = curve_fit(f, t43, g43)
+
+#pl.scatter(t41,g41, label= "Trial 1", s=.5)
+#pl.scatter(t42,g42, label= "Trial 2", s=.5)
+#pl.scatter(t43,g43, label= "Trial 3", s=.5)
+#pl.xlabel("Time (s)")
+#pl.ylabel("Position (cm)")
+#pl.title("Glycerine: Position vs time for ball 4")
+#pl.plot(t41, f(t41, popt41[0], popt41[1]), label = "line of best fit, trial 1")
+#pl.plot(t42, f(t42, popt42[0], popt42[1]), label = "line of best fit, trial 2")
+#pl.plot(t43, f(t43, popt43[0], popt43[1]), label = "line of best fit, trial 3")
+#pl.legend()
+#pl.show()
+
+v41 = np.diff(g41)/np.diff(t41)
+v42 = np.diff(g42)/np.diff(t42)
+v43 = np.diff(g43)/np.diff(t43)
+
+v4 = np.hstack([v41,v42,v43])
+
+#print("mean terminal velocity for ball 4", np.mean(v4))
+
+v4 = np.mean(v4)
+
+##Glycerine, ball 5
+t51, g51 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf51.txt", unpack = True, skiprows = 2)
+t52, g52 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf52.txt", unpack = True, skiprows = 2)
+t53, g53 = np.loadtxt("D:/physics-labs/motionsinfluids/Glycerine/mtf53.txt", unpack = True, skiprows = 2)
+
+g51, g52, g53 = g51/10, g52/10, g53/10 #convert to cm
+
+t51, g51 = remove_zeros(t51,g51)
+t52, g52 = remove_zeros(t52,g52)
+t53, g53 = remove_zeros(t53,g53)
+
+popt51, pcov51 = curve_fit(f, t51, g51)
+popt52, pcov52 = curve_fit(f, t52, g52)
+popt53, pcov53 = curve_fit(f, t53, g53)
+
+pl.scatter(t51,g51, label= "Trial 1", s= .5)
+pl.scatter(t52,g52, label= "Trial 2", s= .5)
+pl.scatter(t53,g53, label= "Trial 3", s=.5)
+pl.xlabel("Time (s)")
+pl.ylabel("Position (cm)")
+pl.title("Glycerine: Position vs time for ball 5")
+pl.plot(t51, f(t51, popt51[0], popt51[1]), label = "line of best fit, trial 1")
+pl.plot(t52, f(t52, popt52[0], popt52[1]), label = "line of best fit, trial 2")
+pl.plot(t53, f(t53, popt53[0], popt53[1]), label = "line of best fit, trial 3")
+
+#print("f(y)) = slope*t51 + b")
+#print("slope51 = {0:.4g} ± {1:.4g} mm/s".format(popt51[0], np.sqrt(pcov51[0:0])))
+#print("f(y)) = slope*t52 + b")
+#print("slope52 = {0:.4g} ± {1:.4g} mm/s".format(popt52[0], np.sqrt(pcov52[0:0])))
+#print("f(y)) = slope*t51 + b")
+#print("slope53 = {0:.4g} ± {1:.4g} mm/s".format(popt53[0], np.sqrt(pcov53[0:0])))
+
+pl.legend()
+pl.show()
+
+v51 = np.diff(g51)/np.diff(t51)
+v52 = np.diff(g52)/np.diff(t52)
+v53 = np.diff(g53)/np.diff(t53)
+
+v5 = np.hstack([v51,v52,v53])
+
+#print("mean terminal velocity for ball 5", np.mean(v5))
+
+v5 = np.mean(v5)
+
+## u = uncertainty, d = diameter
+d_g, u_g, d_w, u_w = np.loadtxt("D:/physics-labs/motionsinfluids/copy of motion in fluids.txt", unpack = True, skiprows = 8)
+r_g, u_g, r_w, u_w = d_g/2, u_g/2, d_w/2, u_w/2
+
+#adjusting for wall effect
+def v_corr(v, d):
+	D = 9.22
+	return v / (1 - 2.104*(d/D)+ 2.089*(v/D)**2)
+
+v_corr1 = v_corr(v1, d_g[0])
+v_corr2 = v_corr(v2, d_g[1])
+v_corr3 = v_corr(v3, d_g[2])
+v_corr4 = v_corr(v4, d_g[3])
+v_corr5 = v_corr(v5, d_g[4])
+
+v_corrg = [v_corr1, v_corr2, v_corr3, v_corr4, v_corr5]
+print("v corrected is =", v_corrg) #cm/s
+
+##Reynold's number
+def Re(p, l, v, n):
+	return p*l*v/n
+
+Re_g = Re(p_g, d_g, v_corrg, n_g)
+print("Reynold's numbers (s) for glycerol are", Re_g)
+
+##Mean terminal velocity vs radius...
+#pl.plot(r_g, v_corrg, label = "V/R curve")
+#pl.title("Velocity/Radius Graph")
+#pl.xlabel("Radius (cm)")
+#pl.ylabel("Velocity(cm/s)")
+
+#def f(x, a, b):
+#	return a*x + b
+#
+#popt, pcov = curve_fit(f, r_g, v_corrg)
+#
+#pl.plot(r_g, f(r_g, popt[0], popt[1]), label = "Best Fit Curve")
+#pl.legend()
+
+
+##Velocity vs r^2 graph
+pl.plot(r_g**2, v_corrg)
+constant = np.diff(v_corrg)/np.diff(r_g**2)
+A = np.mean(constant)
+print("Constant:", A)
+v_term = A* np.mean(r_g**2)
+print("v_term:", v_term)
+low_Re = (p_g * np.mean(d_g) * v_term)/(n_g)
+print("low_Re:", low_Re)
+
+
